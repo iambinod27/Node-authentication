@@ -51,4 +51,31 @@ router.post("/register", async (req, res) => {
   }
 });
 
+const loginSchema = Joi.object({
+  email: Joi.string().min(6).required().email(),
+  password: Joi.string().min(6).required(),
+});
+
+// Login User
+router.post("/login", async (req, res) => {
+  // Checking if user email exist
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) return res.status(400).send("Incorrect Email-ID");
+
+  // Checking if password Matches
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+  if (!validPassword) return res.status(400).send("Incorrect Password");
+
+  try {
+    const { error } = await loginSchema.validateAsync(req.body);
+    if (error) {
+      return res.status(400).send(error.details[0].message);
+    } else {
+      res.send("success");
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;
