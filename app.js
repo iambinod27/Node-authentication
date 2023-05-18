@@ -16,6 +16,7 @@ const cors = require("cors");
 
 // Import Routes
 const authRoutes = require("./routes/auth/auth");
+const authDashboard = require("./routes/auth/authDashboard");
 
 dotenv.config();
 
@@ -30,3 +31,4 @@ app.use(express.json(), cors());
 
 // ROUTE MIDDLEWARE
 app.use("/api/users", authRoutes);
+app.use("/api/dashboard", authDashboard);

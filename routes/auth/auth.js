@@ -71,7 +71,9 @@ router.post("/login", async (req, res) => {
     if (error) {
       return res.status(400).send(error.details[0].message);
     } else {
-      res.send("success");
+      // Sending Token
+      const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
+      res.header("auth-token", token).send(token);
     }
   } catch (error) {
     res.status(500).send(error);
